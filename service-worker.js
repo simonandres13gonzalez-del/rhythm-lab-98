@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rhythm-lab-98-pwa-v1';
+const CACHE_NAME = 'rhythm-lab-98-mobile-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -29,20 +29,28 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy));
+          return response;
+        })
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
-
       return fetch(event.request).then(response => {
-        const copy = response.clone();
-        if (event.request.url.startsWith(self.location.origin)) {
+        if (response && response.ok && event.request.url.startsWith(self.location.origin)) {
+          const copy = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
         }
         return response;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
       });
     })
   );

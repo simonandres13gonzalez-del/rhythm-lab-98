@@ -1,7 +1,7 @@
 {
   "name": "Rhythm Lab 98",
   "short_name": "Rhythm Lab 98",
-  "description": "Entrenador visual de figuras, patrones rítmicos, BPM y compases.",
+  "description": "Entrenador rítmico visual optimizado para iPhone y uso offline.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

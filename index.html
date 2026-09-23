@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Rhythm Lab 98</title>
 <style>
 :root{--desk:#c9c79a;--win:#c0c0c0;--paper:#f5f1ce;--ink:#111;--blue:#0b3c78;--blue2:#739fc7;--green:#567d54;--red:#9b2d2d}
@@ -46,16 +46,291 @@ select,input[type=number]{width:100%;min-height:34px;background:#fff;border:2px 
 <meta name="apple-mobile-web-app-title" content="Rhythm Lab 98">
 <link rel="apple-touch-icon" href="./icon-180.png">
 
+
+<style id="mobile-ux-v2">
+/* ===== MOBILE / IPHONE UX V2 ===== */
+html{-webkit-text-size-adjust:100%}
+body{
+  padding:
+    max(8px,env(safe-area-inset-top))
+    max(8px,env(safe-area-inset-right))
+    max(8px,env(safe-area-inset-bottom))
+    max(8px,env(safe-area-inset-left));
+  overflow-x:hidden;
+}
+button,select,input{font-size:16px}
+select,input[type=number],.btn{touch-action:manipulation}
+select{min-height:46px}
+input[type=number]{min-height:46px}
+input[type=range]{min-height:44px}
+.check{
+  min-height:44px;
+  padding:4px 2px;
+  font-size:14px;
+}
+.check input{width:22px;height:22px;flex:0 0 auto}
+.btn{
+  min-height:50px;
+  border-width:2px;
+  font-size:15px;
+}
+.header p{line-height:1.45}
+.panel-title,.pt{letter-spacing:.03em}
+.figure-card,.card{overflow:hidden}
+.symbol{overflow-wrap:anywhere;line-height:1.05}
+.explain{overflow-wrap:anywhere}
+.status{align-items:stretch}
+.sc{min-width:0;overflow-wrap:anywhere}
+
+/* Desktop/tablet stays close to the retro layout. */
+@media (max-width: 700px){
+  body{padding:0;background:#c9c79a}
+  .app{width:100%;max-width:none;margin:0}
+  .window{
+    border-left:0;
+    border-right:0;
+    box-shadow:none;
+  }
+
+  /* Keep retro identity, remove decorative browser chrome that wastes phone space. */
+  .title{
+    min-height:38px;
+    padding:7px 10px;
+    position:sticky;
+    top:0;
+    z-index:20;
+  }
+  .title span:first-child{
+    font-size:13px;
+    max-width:calc(100% - 62px);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .title span:last-child{font-size:12px}
+  .menubar{display:none}
+
+  .content{padding:8px}
+  .banner{
+    margin-bottom:8px;
+    padding:9px 10px;
+  }
+  .banner h1{
+    font-size:24px;
+    line-height:1.05;
+    letter-spacing:-1px;
+  }
+  .banner p{
+    font-size:12px;
+    margin-top:5px;
+  }
+
+  .layout{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .side{
+    display:block;
+  }
+  .panel{
+    margin:0 0 8px;
+  }
+  .pb{padding:9px}
+
+  /* Settings are compact but finger-friendly. */
+  .side .panel:first-child .pb{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px 10px;
+  }
+  .side .panel:first-child label{
+    margin:0;
+    min-width:0;
+  }
+  .side .panel:first-child label:first-child,
+  .side .panel:first-child label:nth-child(2),
+  .side .panel:first-child label:last-child{
+    grid-column:1/-1;
+  }
+  .side .panel:first-child .check{
+    align-self:center;
+  }
+  .bpm{
+    grid-template-columns:minmax(0,1fr) 72px;
+  }
+
+  /* Help becomes a small collapsible-looking reference panel. */
+  .side .panel:nth-child(2) .pb{padding:7px}
+  .tip{
+    font-size:11px;
+    line-height:1.4;
+    padding:7px 8px;
+  }
+
+  .main{
+    padding:8px;
+    border-left-width:1px;
+    border-right-width:1px;
+  }
+  .stats{
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    margin-bottom:8px;
+  }
+  .stat{
+    min-height:55px;
+    padding:7px 5px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .stat span{font-size:10px}
+  .stat b{font-size:14px;margin-top:3px}
+
+  .demo{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  /* Put the selected figure first on mobile: user immediately sees what is being practiced. */
+  .demo > section:nth-child(2){order:1}
+  .demo > section.motion{order:2}
+
+  .card{
+    padding:9px 8px;
+  }
+  .symbol{
+    min-height:56px;
+    font-size:48px;
+  }
+  .symbol.compound{
+    font-size:34px;
+    letter-spacing:0;
+  }
+  .fname{
+    font-size:14px;
+    line-height:1.25;
+  }
+  .fextra{font-size:12px}
+
+  .proglab{margin-top:8px}
+  .prog{height:16px}
+
+  /* No horizontal scrolling for the measure visualizer. */
+  .scroll{
+    overflow:visible;
+  }
+  .measuregrid{
+    min-width:0 !important;
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+  .measure{
+    flex:none !important;
+    width:100%;
+    min-height:54px;
+  }
+  .mtitle{margin-top:9px}
+
+  .explain{
+    font-size:11px;
+    line-height:1.45;
+    margin-top:8px;
+  }
+
+  /* Large, obvious transport controls. */
+  .buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    margin-top:9px;
+    position:sticky;
+    bottom:max(5px,env(safe-area-inset-bottom));
+    z-index:15;
+    padding:6px;
+    background:#ece8bd;
+    border:1px solid #8a876c;
+  }
+  .buttons #play{
+    grid-column:1/-1;
+    min-height:56px;
+    font-size:17px;
+  }
+  .buttons #pause,
+  .buttons #restart{
+    min-height:50px;
+  }
+
+  .motion{
+    max-width:none;
+    width:100%;
+    margin:0;
+    padding:8px;
+  }
+  .trackarea{
+    height:265px;
+    min-height:265px;
+    max-height:none;
+  }
+  .mark span{
+    font-size:9px;
+  }
+  .caption{
+    min-height:30px;
+    font-size:11px;
+  }
+
+  .status{
+    position:sticky;
+    bottom:0;
+    z-index:12;
+    background:#c0c0c0;
+    padding-bottom:max(4px,env(safe-area-inset-bottom));
+  }
+  .sc{
+    font-size:11px;
+    line-height:1.3;
+  }
+  .off{display:none}
+}
+
+@media (max-width: 390px){
+  .content{padding:6px}
+  .banner h1{font-size:21px}
+  .side .panel:first-child .pb{
+    grid-template-columns:1fr;
+  }
+  .side .panel:first-child label,
+  .side .panel:first-child label:first-child,
+  .side .panel:first-child label:nth-child(2),
+  .side .panel:first-child label:last-child{
+    grid-column:1;
+  }
+  .stats{gap:5px}
+  .stat{min-height:52px}
+  .symbol{font-size:43px}
+  .symbol.compound{font-size:30px}
+  .trackarea{height:245px;min-height:245px}
+  .buttons{
+    grid-template-columns:1fr 1fr;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="app"><div class="window">
 <div class="title"><span>♪ Rhythm Lab 98 - Visualizador de figuras</span><span>_ □ ×</span></div>
 <div class="menubar">Archivo &nbsp;&nbsp; Compás &nbsp;&nbsp; Figura &nbsp;&nbsp; Ayuda</div>
 <div class="content">
-<section class="banner"><h1>RHYTHM LAB '98</h1><p>Un pulso visual completo siempre es: abajo → arriba → abajo.</p></section>
+<section class="banner"><h1>RHYTHM LAB '98</h1><p>Elige compás, figura y BPM. Un pulso completo es: <b>abajo → arriba → abajo</b>.</p></section>
 <div class="layout">
 <aside class="side">
-<section class="panel"><div class="pt">CONFIGURACIÓN</div><div class="pb">
+<section class="panel"><div class="pt">1. CONFIGURA EL RITMO</div><div class="pb">
 <label><b>Compás</b><select id="meter"><option>4/4</option><option>4/2</option><option>2/4</option><option>3/4</option></select></label>
 <label><b style="font-size:22px;line-height:1">♫</b><select id="figure" aria-label="Figura o patrón rítmico">
 <option value="whole">𝅝  Redonda</option>
@@ -79,7 +354,7 @@ select,input[type=number]{width:100%;min-height:34px;background:#fff;border:2px 
 <label class="check"><input type="checkbox" id="loopOn"><span>Loop / ciclo continuo</span></label>
 <label><b>Velocidad (BPM)</b><div class="bpm"><input id="bpmR" type="range" min="30" max="240" value="80"><input id="bpmN" type="number" min="30" max="240" value="80"></div></label>
 </div></section>
-<section class="panel"><div class="pt">CÓMO LEER LA BOLA</div><div class="pb"><div class="tip">
+<section class="panel"><div class="pt">2. CÓMO SE MUEVE</div><div class="pb"><div class="tip">
 Inicio: ABAJO<br><br>
 ¼ pulso: mitad subiendo<br>
 ½ pulso: ARRIBA<br>
@@ -117,12 +392,12 @@ Inicio: ABAJO<br><br>
 <div class="proglab"><span>Demostración</span><span id="pct">0%</span></div><div class="prog"><div class="fill" id="fill"></div></div>
 <div class="mtitle">POSICIÓN DENTRO DEL COMPÁS</div><div class="scroll"><div class="measuregrid" id="measuregrid"></div></div>
 <div class="explain" id="explain"></div>
-<div class="buttons"><button class="btn primary" id="play">▶ Reproducir</button><button class="btn" id="pause" disabled>Ⅱ Pausa</button><button class="btn" id="restart">↺ Reiniciar</button></div>
+<div class="tip" style="margin-top:8px">Pulsa <b>Reproducir</b> para ver y escuchar la duración. Activa <b>Loop</b> para repetirla continuamente.</div><div class="buttons"><button class="btn primary" id="play">▶ Reproducir</button><button class="btn" id="pause" disabled>Ⅱ Pausar</button><button class="btn" id="restart">↺ Reiniciar</button></div>
 </section>
 </div>
 </main>
 </div></div>
-<div class="status"><div class="sc" id="status">Listo para reproducir.</div><div class="sc off">OFFLINE</div></div>
+<div class="status"><div class="sc" id="status">Listo. Elige una figura y pulsa Reproducir.</div><div class="sc off">OFFLINE</div></div>
 </div></div>
 <script>
 (()=>{

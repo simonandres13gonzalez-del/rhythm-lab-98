@@ -1,27 +1,35 @@
-RHYTHM LAB 98 - PWA / IPHONE / OFFLINE
+RHYTHM LAB 98 - PWA MOBILE V2
 
-ARCHIVOS
-- index.html
-- manifest.webmanifest
-- service-worker.js
-- icon-180.png
-- icon-192.png
-- icon-512.png
-- .nojekyll
+Esta versión fue rediseñada específicamente para iPhone.
 
-IMPORTANTE:
-Para que el modo offline funcione como PWA, debes publicar estos archivos
-en un sitio HTTPS (por ejemplo GitHub Pages). No basta con abrir index.html
-directamente desde la app Archivos del iPhone.
+MEJORAS
+- No hay desplazamiento horizontal.
+- Controles táctiles más grandes.
+- Paneles apilados y más fáciles de leer.
+- Selector y BPM adaptados al ancho del teléfono.
+- La figura seleccionada aparece antes que la animación en móvil.
+- Botón Reproducir grande.
+- Pausa y Reiniciar accesibles con una mano.
+- Visualización del compás ocupa todo el ancho disponible.
+- Zona de animación más compacta.
+- Respeta el área segura del notch/Dynamic Island y la barra inferior.
+- Sigue conservando el estilo retro.
+- Sigue funcionando offline.
 
-DESPUÉS DE PUBLICAR:
-1. Abre la URL en Safari en el iPhone.
-2. Espera unos segundos a que termine la primera carga.
-3. Compartir -> Agregar a Inicio.
-4. Activa "Abrir como app web".
-5. Agrega la app.
-6. Ábrela una vez desde el icono.
-7. Después puedes probar con modo avión.
+ACTUALIZACIÓN DESDE UNA VERSIÓN ANTERIOR
+Reemplaza TODOS los archivos publicados en GitHub Pages por los de esta carpeta.
 
-La música/sonido se genera localmente con Web Audio, por lo que no necesita
-archivos de sonido ni conexión a Internet una vez almacenada la PWA.
+Después, en el iPhone:
+1. Con Internet, abre la URL de Rhythm Lab 98 en Safari.
+2. Recarga la página.
+3. Abre la app desde el icono de Inicio.
+4. Si todavía aparece el diseño anterior, cierra la app por completo y vuelve a abrirla.
+5. Como último recurso, elimina el icono de la pantalla de Inicio y vuelve a usar:
+   Safari -> Compartir -> Agregar a Inicio.
+
+El service worker usa una caché nueva (rhythm-lab-98-mobile-v2) para forzar
+la actualización de los archivos antiguos.
+
+MODO OFFLINE
+Después de abrir una vez esta versión con Internet, puedes usarla nuevamente
+sin conexión.
