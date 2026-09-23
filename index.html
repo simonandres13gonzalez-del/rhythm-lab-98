@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rhythm Lab 98</title>
+<style>
+:root{--desk:#c9c79a;--win:#c0c0c0;--paper:#f5f1ce;--ink:#111;--blue:#0b3c78;--blue2:#739fc7;--green:#567d54;--red:#9b2d2d}
+*{box-sizing:border-box}body{margin:0;padding:12px;min-height:100vh;background:var(--desk);font-family:Tahoma,Verdana,Arial,sans-serif;color:var(--ink)}
+.app{max-width:1000px;margin:auto}.window{background:var(--win);border:2px solid;border-color:#fff #444 #444 #fff;box-shadow:1px 1px #000}
+.title{display:flex;justify-content:space-between;align-items:center;padding:5px 7px;color:#fff;font-weight:bold;background:linear-gradient(90deg,var(--blue),var(--blue2))}
+.menubar{padding:6px 10px;border-bottom:1px solid #777;font-size:13px}.content{padding:10px}
+.banner{background:var(--paper);border:2px solid;border-color:#666 #fff #fff #666;padding:10px 12px;margin-bottom:10px}
+.banner h1{margin:0;font:700 34px "Courier New",monospace}.banner p{margin:4px 0 0;font-size:13px}
+.layout{display:grid;grid-template-columns:240px 1fr;gap:10px}.panel{background:#d6d6d6;border:2px solid;border-color:#fff #666 #666 #fff;margin-bottom:9px}
+.pt{background:#aaa87d;border-bottom:1px solid #666;padding:5px 7px;font:bold 12px "Courier New",monospace}.pb{padding:8px}
+label{display:block;font-size:12px;margin:0 0 9px}label b{display:block;margin-bottom:4px}
+select,input[type=number]{width:100%;min-height:34px;background:#fff;border:2px solid;border-color:#555 #fff #fff #555;padding:4px 6px;font-size:14px}
+.bpm{display:grid;grid-template-columns:1fr 68px;gap:6px;align-items:center}.check{display:flex;align-items:center;gap:7px}.check input{width:17px;height:17px}
+.tip{font:12px/1.45 "Courier New",monospace;background:#eeeac7;border:1px dashed #777;padding:7px}
+.main{background:#ece8bd;border:2px solid;border-color:#666 #fff #fff #666;padding:10px;min-width:0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}.stat{background:#f7f4da;border:1px solid #777;padding:6px;text-align:center}.stat span{font-size:10px;color:#555;display:block}.stat b{font:700 15px "Courier New",monospace}
+.demo{display:grid;grid-template-columns:260px 1fr;gap:10px}.motion{background:#faf8df;border:2px solid;border-color:#555 #fff #fff #555;padding:8px}
+.motion h3{margin:0 0 6px;text-align:center;font:bold 12px "Courier New",monospace}.trackarea{position:relative;height:340px}
+.track{position:absolute;left:50%;top:22px;bottom:22px;width:8px;transform:translateX(-50%);background:#b1b1a4;border:1px solid #666}
+.mark{position:absolute;left:calc(50% + 16px);right:2px;border-top:1px solid #999}.mark span{font:10px "Courier New",monospace;background:#faf8df;padding:0 2px;position:absolute;top:-7px;left:4px;white-space:nowrap}
+.top{top:22px}.m75{top:25%}.mid{top:50%}.m25{bottom:25%}.bottom{bottom:22px}
+.ball{position:absolute;left:50%;width:30px;height:30px;border-radius:50%;background:#315a87;border:2px solid #172d43;transform:translateX(-50%);z-index:3}
+.end{position:absolute;left:calc(50% - 30px);width:60px;height:4px;background:var(--red);z-index:2}.endlab{position:absolute;left:7px;color:var(--red);font:bold 11px "Courier New",monospace}
+.caption{text-align:center;min-height:36px;font:12px/1.4 "Courier New",monospace;margin-top:4px}
+.card{background:#f9f5d8;border:1px solid #777;padding:10px;text-align:center}.symbol{min-height:72px;display:flex;align-items:center;justify-content:center;font:700 62px Georgia,serif;letter-spacing:.03em}.symbol.compound{font-size:44px}.attacks{margin-top:7px;display:flex;gap:5px;justify-content:center;align-items:center;min-height:18px}.attack-dot{width:9px;height:9px;border-radius:50%;background:#777;border:1px solid #444}.attack-dot.first{width:12px;height:12px;background:#315a87;border-color:#172d43}.fname{font:bold 17px "Courier New",monospace}.fextra{font-size:12px;color:#555;margin-top:3px}
+.proglab{display:flex;justify-content:space-between;font:11px "Courier New",monospace;margin:9px 0 3px}.prog{height:18px;background:#fff;border:2px solid;border-color:#555 #fff #fff #555;overflow:hidden}.fill{height:100%;width:0;background:#78906b}
+.mtitle{font:bold 12px "Courier New",monospace;margin:10px 0 5px}.scroll{overflow-x:auto}.measuregrid{min-width:400px;display:flex;gap:8px}
+.measure{flex:1 0 250px;display:grid;position:relative;min-height:62px;background:#fff;border:1px solid #555}.beat{position:relative;border-right:1px solid #aaa}.beat:last-child{border-right:0}.beatnum{position:absolute;top:3px;left:4px;font:bold 10px "Courier New",monospace;color:#555}.beatfill{position:absolute;inset:0 auto 0 0;background:rgba(84,116,77,.25);width:0}.endline{position:absolute;top:0;bottom:0;width:3px;background:var(--red);z-index:4}
+.explain{margin-top:9px;background:#ddd9ad;border:1px dashed #666;padding:7px;font:12px/1.5 "Courier New",monospace}
+.buttons{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.btn{min-height:42px;padding:7px 13px;background:#c0c0c0;border:2px solid;border-color:#fff #555 #555 #fff;font:bold 13px Tahoma;cursor:pointer}.btn:active{border-color:#555 #fff #fff #555}.btn:disabled{color:#777;cursor:not-allowed}.primary{background:#d8d7b4}
+.status{display:flex;justify-content:space-between;gap:4px;padding:4px}.sc{border:1px solid;border-color:#777 #fff #fff #777;padding:4px 6px;font-size:12px;flex:1}.off{flex:0}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr;gap:8px}.panel{margin:0}}
+@media(max-width:620px){.demo{grid-template-columns:1fr}.motion{max-width:340px;width:100%;margin:auto}.stats{grid-template-columns:1fr 1fr}.side{grid-template-columns:1fr}.trackarea{height:300px}}
+</style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0b3c78">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rhythm Lab 98">
+<link rel="apple-touch-icon" href="./icon-180.png">
+
+</head>
+<body>
+<div class="app"><div class="window">
+<div class="title"><span>♪ Rhythm Lab 98 - Visualizador de figuras</span><span>_ □ ×</span></div>
+<div class="menubar">Archivo &nbsp;&nbsp; Compás &nbsp;&nbsp; Figura &nbsp;&nbsp; Ayuda</div>
+<div class="content">
+<section class="banner"><h1>RHYTHM LAB '98</h1><p>Un pulso visual completo siempre es: abajo → arriba → abajo.</p></section>
+<div class="layout">
+<aside class="side">
+<section class="panel"><div class="pt">CONFIGURACIÓN</div><div class="pb">
+<label><b>Compás</b><select id="meter"><option>4/4</option><option>4/2</option><option>2/4</option><option>3/4</option></select></label>
+<label><b style="font-size:22px;line-height:1">♫</b><select id="figure" aria-label="Figura o patrón rítmico">
+<option value="whole">𝅝  Redonda</option>
+<option value="half">𝅗𝅥  Blanca</option>
+<option value="dottedHalf">𝅗𝅥·  Blanca con puntillo</option>
+<option value="quarter" selected>♩  Negra</option>
+<option value="dottedQuarter">♩·  Negra con puntillo</option>
+<option value="eighth">♪  Corchea</option>
+<option value="sixteenth">♬  Semicorchea</option>
+<option value="twoEighths">♪ ♪  2 corcheas</option>
+<option value="eighthTriplet">♪³ ♪³ ♪  Tresillo de corchea</option>
+<option value="fourSixteenths">♬ ♬ ♬ ♬  4 semicorcheas</option>
+<option value="eighthTwoSixteenths">♪ ♬ ♬  Corchea + 2 semicorcheas</option>
+<option value="twoSixteenthsEighth">♬ ♬ ♪  2 semicorcheas + corchea</option>
+<option value="dottedEighthSixteenth">♪· ♬  Corchea con puntillo + semicorchea</option>
+<option value="sixteenthDottedEighth">♬ ♪·  Semicorchea + corchea con puntillo</option>
+</select></label>
+<label class="check"><input type="checkbox" id="dotted"><span>Con puntillo</span></label>
+<label class="check"><input type="checkbox" id="rest"><span>Mostrar como silencio</span></label>
+<label class="check"><input type="checkbox" id="soundOn" checked><span>Sonido activado</span></label>
+<label class="check"><input type="checkbox" id="loopOn"><span>Loop / ciclo continuo</span></label>
+<label><b>Velocidad (BPM)</b><div class="bpm"><input id="bpmR" type="range" min="30" max="240" value="80"><input id="bpmN" type="number" min="30" max="240" value="80"></div></label>
+</div></section>
+<section class="panel"><div class="pt">CÓMO LEER LA BOLA</div><div class="pb"><div class="tip">
+Inicio: ABAJO<br><br>
+¼ pulso: mitad subiendo<br>
+½ pulso: ARRIBA<br>
+¾ pulso: mitad bajando<br>
+1 pulso: ABAJO de nuevo
+</div></div></section>
+</aside>
+<main class="main">
+<div class="stats">
+<div class="stat"><span>COMPÁS</span><b id="mOut">4/4</b></div>
+<div class="stat"><span>PULSO BASE</span><b id="unitOut">Negra</b></div>
+<div class="stat"><span>DURACIÓN</span><b id="beatsOut">1 pulso</b></div>
+<div class="stat"><span>TIEMPO REAL</span><b id="secOut">0.750 s</b></div>
+</div>
+<div class="demo">
+<section class="motion"><h3>RECORRIDO DEL PULSO</h3>
+<div class="trackarea" id="trackarea">
+<div class="track"></div>
+<div class="mark top"><span>ARRIBA · ½</span></div>
+<div class="mark m75"><span>¾ de subida</span></div>
+<div class="mark mid"><span>MITAD</span></div>
+<div class="mark m25"><span>¼ de subida</span></div>
+<div class="mark bottom"><span>ABAJO · inicio/fin</span></div>
+<div class="end" id="end"></div><div class="endlab" id="endlab">FIN</div><div class="ball" id="ball"></div>
+</div>
+<div class="caption" id="caption"></div>
+</section>
+<section>
+<div class="card">
+<div class="symbol" id="symbol">♩</div>
+<div class="fname" id="fname">NEGRA</div>
+<div class="fextra" id="fextra"></div>
+<div class="attacks" id="attacks" aria-label="Ataques del patrón"></div>
+</div>
+<div class="proglab"><span>Demostración</span><span id="pct">0%</span></div><div class="prog"><div class="fill" id="fill"></div></div>
+<div class="mtitle">POSICIÓN DENTRO DEL COMPÁS</div><div class="scroll"><div class="measuregrid" id="measuregrid"></div></div>
+<div class="explain" id="explain"></div>
+<div class="buttons"><button class="btn primary" id="play">▶ Reproducir</button><button class="btn" id="pause" disabled>Ⅱ Pausa</button><button class="btn" id="restart">↺ Reiniciar</button></div>
+</section>
+</div>
+</main>
+</div></div>
+<div class="status"><div class="sc" id="status">Listo para reproducir.</div><div class="sc off">OFFLINE</div></div>
+</div></div>
+<script>
+(()=>{
+const meters={
+  '4/4':{n:4,d:4,u:'Negra'},
+  '4/2':{n:4,d:2,u:'Blanca'},
+  '2/4':{n:2,d:4,u:'Negra'},
+  '3/4':{n:3,d:4,u:'Negra'}
+};
+
+/*
+  v = duración total como fracción de redonda.
+  parts = duración proporcional de cada nota dentro del patrón.
+  fixedDotted = la figura ya trae puntillo incorporado y no acepta otro.
+*/
+const figs={
+  whole:{
+    n:'Redonda',v:1,s:'𝅝',parts:[1]
+  },
+  half:{
+    n:'Blanca',v:.5,s:'𝅗𝅥',parts:[1]
+  },
+  dottedHalf:{
+    n:'Blanca con puntillo',v:.75,s:'𝅗𝅥·',parts:[1],fixedDotted:true
+  },
+  quarter:{
+    n:'Negra',v:.25,s:'♩',parts:[1]
+  },
+  dottedQuarter:{
+    n:'Negra con puntillo',v:.375,s:'♩·',parts:[1],fixedDotted:true
+  },
+  eighth:{
+    n:'Corchea',v:.125,s:'♪',parts:[1]
+  },
+  sixteenth:{
+    n:'Semicorchea',v:.0625,s:'♬',parts:[1]
+  },
+
+  twoEighths:{
+    n:'2 corcheas',v:.25,s:'♪ ♪',
+    parts:[.5,.5]
+  },
+  eighthTriplet:{
+    n:'Tresillo de corchea',v:.25,s:'♪³ ♪³ ♪',
+    parts:[1/3,1/3,1/3]
+  },
+  fourSixteenths:{
+    n:'4 semicorcheas',v:.25,s:'♬ ♬ ♬ ♬',
+    parts:[.25,.25,.25,.25]
+  },
+  eighthTwoSixteenths:{
+    n:'Corchea + 2 semicorcheas',v:.25,s:'♪ ♬ ♬',
+    parts:[.5,.25,.25]
+  },
+  twoSixteenthsEighth:{
+    n:'2 semicorcheas + corchea',v:.25,s:'♬ ♬ ♪',
+    parts:[.25,.25,.5]
+  },
+
+  // 3/4 + 1/4 del pulso = 1 pulso total en compases x/4.
+  dottedEighthSixteenth:{
+    n:'Corchea con puntillo + semicorchea',v:.25,s:'♪· ♬',
+    parts:[.75,.25],fixedDotted:true
+  },
+  sixteenthDottedEighth:{
+    n:'Semicorchea + corchea con puntillo',v:.25,s:'♬ ♪·',
+    parts:[.25,.75],fixedDotted:true
+  }
+};
+
+const rests={
+  whole:'𝄻',
+  half:'𝄼',
+  dottedHalf:'𝄼·',
+  quarter:'𝄽',
+  dottedQuarter:'𝄽·',
+  eighth:'𝄾',
+  sixteenth:'𝄿',
+  twoEighths:'𝄾 𝄾',
+  eighthTriplet:'𝄾 𝄾 𝄾',
+  fourSixteenths:'𝄿 𝄿 𝄿 𝄿',
+  eighthTwoSixteenths:'𝄾 𝄿 𝄿',
+  twoSixteenthsEighth:'𝄿 𝄿 𝄾',
+  dottedEighthSixteenth:'𝄾· 𝄿',
+  sixteenthDottedEighth:'𝄿 𝄾·'
+};
+
+const $=x=>document.getElementById(x),
+meter=$('meter'),
+figure=$('figure'),
+dotted=$('dotted'),
+rest=$('rest'),
+soundOn=$('soundOn'),
+loopOn=$('loopOn'),
+bpmR=$('bpmR'),
+bpmN=$('bpmN');
+
+const ball=$('ball'),
+end=$('end'),
+endlab=$('endlab'),
+track=$('trackarea'),
+fill=$('fill'),
+pct=$('pct'),
+play=$('play'),
+pause=$('pause'),
+restart=$('restart'),
+status=$('status'),
+symbol=$('symbol'),
+attacksEl=$('attacks');
+
+let raf=0,
+    playing=false,
+    elapsed=0,
+    last=null,
+    audioCtx=null,
+    activeNodes=[],
+    currentRunData=null;
+
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+function selectedFigure(){
+  return figs[figure.value];
+}
+
+function syncDottedAvailability(){
+  const f=selectedFigure();
+  if(f.fixedDotted){
+    dotted.checked=false;
+    dotted.disabled=true;
+    dotted.parentElement.style.opacity='.55';
+    dotted.parentElement.title='Esta figura ya incluye puntillo.';
+  }else{
+    dotted.disabled=false;
+    dotted.parentElement.style.opacity='1';
+    dotted.parentElement.title='';
+  }
+}
+
+function data(){
+  const m=meters[meter.value];
+  const f=selectedFigure();
+
+  // Solo las figuras no fijas pueden recibir el checkbox de puntillo.
+  const factor=(!f.fixedDotted && dotted.checked)?1.5:1;
+  const pulses=(f.v*factor)/(1/m.d);
+  const bpm=clamp(+bpmN.value||80,30,240);
+  const sec=pulses*60/bpm;
+
+  let cursor=0;
+  const events=f.parts.map((part,index)=>{
+    const ev={index,start:cursor,duration:part};
+    cursor+=part;
+    return ev;
+  });
+
+  return {m,f,p:pulses,b:bpm,sec,events,factor};
+}
+
+function ft(p){
+  let q=Math.round(p*24)/24;
+  const known=[
+    [1/8,'⅛'],[1/6,'⅙'],[1/4,'¼'],[1/3,'⅓'],
+    [3/8,'⅜'],[1/2,'½'],[5/8,'⅝'],[2/3,'⅔'],
+    [3/4,'¾'],[7/8,'⅞']
+  ];
+  const w=Math.floor(q+1e-9),r=q-w;
+  const match=known.find(([v])=>Math.abs(r-v)<1e-5);
+  if(w&&!match)return String(w);
+  if(w&&match)return w+' '+match[1];
+  if(match)return match[1];
+  return (Math.round(q*1000)/1000).toString();
+}
+
+function posDesc(p){
+  const ph=((p%1)+1)%1,
+        r=Math.round(ph*8)/8,
+        c=Math.floor(p+1e-9);
+
+  const txt={
+    0:'abajo',
+    0.125:'a 1/4 de la subida',
+    0.25:'en la mitad subiendo',
+    0.375:'a 3/4 de la subida',
+    0.5:'arriba',
+    0.625:'a 3/4 de la bajada',
+    0.75:'en la mitad bajando',
+    0.875:'a 1/4 antes de llegar abajo'
+  }[r]||'en una subdivisión';
+
+  if(r===0){
+    return p===1
+      ? 'abajo después de 1 recorrido completo'
+      : `abajo después de ${Math.round(p)} recorridos completos`;
+  }
+
+  return c
+    ? `${txt}, después de ${c} recorrido${c>1?'s':''} completo${c>1?'s':''}`
+    : txt;
+}
+
+function yfrac(p){
+  const ph=((p%1)+1)%1;
+  return ph<=.5?ph/.5:(1-ph)/.5;
+}
+
+function place(el,p){
+  const top=22,
+        bottom=track.clientHeight-22,
+        span=bottom-top,
+        cy=bottom-yfrac(p)*span;
+
+  el.style.top=(cy-(el===ball?15:2))+'px';
+  el.style.bottom='auto';
+  return cy;
+}
+
+function setEnd(p){
+  const cy=place(end,p);
+  endlab.style.top=clamp(cy-24,4,track.clientHeight-24)+'px';
+}
+
+function grid(d){
+  const g=$('measuregrid');
+  g.innerHTML='';
+
+  const mc=Math.max(1,Math.ceil(d.p/d.m.n));
+
+  for(let mi=0;mi<mc;mi++){
+    const me=document.createElement('div');
+    me.className='measure';
+    me.style.gridTemplateColumns=`repeat(${d.m.n},1fr)`;
+
+    for(let bi=0;bi<d.m.n;bi++){
+      const be=document.createElement('div');
+      be.className='beat';
+
+      const num=document.createElement('span');
+      num.className='beatnum';
+      num.textContent=bi+1;
+
+      const bf=document.createElement('div');
+      bf.className='beatfill';
+
+      const start=mi*d.m.n+bi;
+      const cov=clamp(d.p-start,0,1);
+      bf.style.width=cov*100+'%';
+
+      be.append(num,bf);
+      me.appendChild(be);
+    }
+
+    if(mi===mc-1){
+      const ln=document.createElement('div');
+      ln.className='endline';
+      const within=d.p-mi*d.m.n;
+      ln.style.left=clamp(within/d.m.n*100,0,100)+'%';
+      me.appendChild(ln);
+    }
+
+    g.appendChild(me);
+  }
+}
+
+function drawAttacks(d){
+  attacksEl.innerHTML='';
+
+  if(rest.checked){
+    const t=document.createElement('span');
+    t.style.font='11px "Courier New",monospace';
+    t.style.color='#666';
+    t.textContent='silencio durante toda la duración';
+    attacksEl.appendChild(t);
+    return;
+  }
+
+  d.events.forEach((ev,i)=>{
+    const dot=document.createElement('span');
+    dot.className='attack-dot'+(i===0?' first':'');
+    const durPct=Math.round(ev.duration*1000)/10;
+    dot.title=`Nota ${i+1}: dura ${durPct}% del patrón`;
+    attacksEl.appendChild(dot);
+  });
+}
+
+function ensureAudio(){
+  if(!soundOn.checked||rest.checked)return null;
+
+  if(!audioCtx){
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx)return null;
+    audioCtx=new Ctx();
+  }
+
+  if(audioCtx.state==='suspended')audioCtx.resume();
+  return audioCtx;
+}
+
+function clearScheduledAudio(){
+  activeNodes.forEach(node=>{
+    try{node.stop()}catch(e){}
+    try{node.disconnect()}catch(e){}
+  });
+  activeNodes=[];
+}
+
+function scheduleTone(startTime,duration,strong=false){
+  const ctx=ensureAudio();
+  if(!ctx)return;
+
+  const attack=.006;
+  const release=Math.min(.018,Math.max(.006,duration*.08));
+  const audible=Math.max(.025,duration);
+
+  const osc=ctx.createOscillator();
+  const gain=ctx.createGain();
+
+  osc.type='sine';
+  osc.frequency.setValueAtTime(strong?523.25:440,startTime);
+
+  const peak=strong?.19:.125;
+
+  gain.gain.setValueAtTime(.0001,startTime);
+  gain.gain.exponentialRampToValueAtTime(peak,startTime+attack);
+
+  const releaseStart=Math.max(startTime+attack,startTime+audible-release);
+  gain.gain.setValueAtTime(peak,releaseStart);
+  gain.gain.exponentialRampToValueAtTime(.0001,startTime+audible);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start(startTime);
+  osc.stop(startTime+audible+.01);
+
+  activeNodes.push(osc);
+}
+
+function scheduleCycle(d,when){
+  const ctx=ensureAudio();
+  if(!ctx||rest.checked||!soundOn.checked)return;
+
+  d.events.forEach((ev,i)=>{
+    const start=when+ev.start*d.sec;
+    const duration=ev.duration*d.sec;
+    scheduleTone(start,duration,i===0);
+  });
+}
+
+function stop(){
+  playing=false;
+  if(raf)cancelAnimationFrame(raf);
+  raf=0;
+  last=null;
+  clearScheduledAudio();
+  play.disabled=false;
+  pause.disabled=true;
+}
+
+function update(reset=true){
+  syncDottedAvailability();
+
+  const d=data();
+
+  const extraDot=(!d.f.fixedDotted&&dotted.checked)?' con puntillo':'';
+  const name=(rest.checked?'Silencio de ':'')+d.f.n+extraDot;
+
+  $('mOut').textContent=meter.value;
+  $('unitOut').textContent=d.m.u;
+  $('beatsOut').textContent=ft(d.p)+' pulso'+(Math.abs(d.p-1)<1e-9?'':'s');
+  $('secOut').textContent=d.sec.toFixed(3)+' s';
+
+  symbol.textContent=
+    (rest.checked?(rests[figure.value]||'𝄽'):d.f.s)+
+    ((!d.f.fixedDotted&&dotted.checked)?' ·':'');
+
+  symbol.classList.toggle('compound',d.f.parts.length>1);
+
+  $('fname').textContent=name.toUpperCase();
+  $('fextra').textContent=
+    `${ft(d.p)} pulso${Math.abs(d.p-1)<1e-9?'':'s'} en ${meter.value}`;
+
+  $('caption').textContent=`${name} termina ${posDesc(d.p)}.`;
+
+  let soundText='';
+
+  if(rest.checked){
+    soundText=' Es un silencio: no se genera sonido durante ese valor.';
+  }else if(d.events.length===1){
+    soundText=' El sonido se sostiene desde el inicio hasta el final completo de la figura.';
+  }else{
+    const parts=d.events
+      .map(ev=>`${Math.round(ev.duration*1000)/10}%`)
+      .join(' + ');
+
+    soundText=
+      ` El patrón reparte su duración en ${parts}. `+
+      `Cada sonido se mantiene durante el valor exacto de su figura.`;
+  }
+
+  $('explain').textContent=
+    `En ${meter.value}, 1 pulso equivale a una ${d.m.u.toLowerCase()}. `+
+    `${name} dura ${ft(d.p)} pulso${Math.abs(d.p-1)<1e-9?'':'s'}. `+
+    `A ${d.b} BPM equivale a ${d.sec.toFixed(3)} segundos.`+
+    soundText;
+
+  drawAttacks(d);
+  grid(d);
+  setEnd(d.p);
+
+  if(reset){
+    stop();
+    elapsed=0;
+    currentRunData=null;
+    place(ball,0);
+    fill.style.width='0%';
+    pct.textContent='0%';
+    status.textContent='Listo para reproducir.';
+  }
+}
+
+function beginAudioCycle(d){
+  const ctx=ensureAudio();
+  if(!ctx)return;
+
+  clearScheduledAudio();
+  const when=ctx.currentTime+.025;
+  scheduleCycle(d,when);
+}
+
+function anim(ts){
+  if(!playing)return;
+
+  const d=currentRunData||data();
+
+  if(last===null)last=ts;
+  elapsed+=ts-last;
+  last=ts;
+
+  const total=d.sec*1000;
+  const pr=clamp(elapsed/total,0,1);
+
+  place(ball,d.p*pr);
+  fill.style.width=pr*100+'%';
+  pct.textContent=Math.round(pr*100)+'%';
+
+  if(pr>=1){
+    if(loopOn.checked){
+      elapsed=0;
+      last=ts;
+      place(ball,0);
+      fill.style.width='0%';
+      pct.textContent='0%';
+
+      if(soundOn.checked&&!rest.checked){
+        beginAudioCycle(d);
+      }
+
+      status.textContent='Loop activo · repitiendo con duración sonora real...';
+      raf=requestAnimationFrame(anim);
+      return;
+    }
+
+    playing=false;
+    raf=0;
+    last=null;
+    activeNodes=[];
+    play.disabled=false;
+    pause.disabled=true;
+    status.textContent='Fin: '+posDesc(d.p)+'.';
+    return;
+  }
+
+  raf=requestAnimationFrame(anim);
+}
+
+function doPlay(){
+  const d=data();
+
+  if(elapsed>=d.sec*1000-1){
+    elapsed=0;
+  }
+
+  currentRunData=d;
+  playing=true;
+  last=null;
+  play.disabled=true;
+  pause.disabled=false;
+
+  if(soundOn.checked&&!rest.checked){
+    beginAudioCycle(d);
+  }
+
+  if(loopOn.checked){
+    status.textContent=soundOn.checked&&!rest.checked
+      ? 'Loop activo · sonido sostenido según cada figura...'
+      : 'Loop activo · reproduciendo...';
+  }else{
+    status.textContent=soundOn.checked&&!rest.checked
+      ? 'Reproduciendo duración sonora real...'
+      : 'Reproduciendo...';
+  }
+
+  raf=requestAnimationFrame(anim);
+}
+
+play.onclick=doPlay;
+
+pause.onclick=()=>{
+  stop();
+  status.textContent='Pausado.';
+};
+
+restart.onclick=()=>update(true);
+
+meter.onchange=()=>update(true);
+
+figure.onchange=()=>{
+  syncDottedAvailability();
+  update(true);
+};
+
+[dotted,rest,soundOn,loopOn].forEach(e=>{
+  e.onchange=()=>update(true);
+});
+
+bpmR.oninput=()=>{
+  bpmN.value=bpmR.value;
+  update(true);
+};
+
+bpmN.onchange=()=>{
+  const v=clamp(+bpmN.value||80,30,240);
+  bpmN.value=v;
+  bpmR.value=v;
+  update(true);
+};
+
+addEventListener('resize',()=>{
+  const d=currentRunData||data();
+  const pr=d.sec?clamp(elapsed/(d.sec*1000),0,1):0;
+  place(ball,d.p*pr);
+  setEnd(d.p);
+});
+
+syncDottedAvailability();
+update(true);
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js', { scope: './' })
+      .catch(() => {});
+  });
+}
+</script>
+
+</body></html>

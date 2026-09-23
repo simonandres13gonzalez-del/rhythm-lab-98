@@ -1,0 +1,23 @@
+{
+  "name": "Rhythm Lab 98",
+  "short_name": "Rhythm Lab 98",
+  "description": "Entrenador visual de figuras, patrones rítmicos, BPM y compases.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#c9c79a",
+  "theme_color": "#0b3c78",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
